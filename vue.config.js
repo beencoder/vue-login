@@ -1,4 +1,10 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
-  transpileDependencies: true
+  transpileDependencies: true,
+  outputDir: './docs',
+  indexPath: 'index.html',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  chainWebpack: config => {
+    config.module.rules.delete('eslint');
+  }
 })
