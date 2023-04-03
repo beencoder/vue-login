@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Index from "../components/Main.vue";
+import Index from "../components/Index.vue";
 import Login from "../components/Login.vue";
 import SignUp from "../components/SignUp.vue";
 import Edit from "../components/EditProfile.vue";
@@ -7,12 +7,11 @@ import Edit from "../components/EditProfile.vue";
 const routes = [
   {
     path: "/",
-    name: "Main",
-    component: Index
+    redirect: "/index"
   },
   {
     path: "/index",
-    name: "Main",
+    name: "Index",
     component: Index
   },
   {
