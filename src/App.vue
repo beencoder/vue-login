@@ -1,26 +1,45 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  name: "App"
 }
 </script>
 
 <style>
+@import url("./assets/css/reset.css");
+@import url("./assets/css/common.css");
+
+@font-face {
+  font-family: 'NotoSansKR-Regular';
+  src: url('./assets/fonts/NotoSansKR-Regular.otf');
+}
+@font-face {
+  font-family: 'Trirong-Regular';
+  src: url('./assets/fonts/Trirong-Regular.ttf');
+}
+@font-face {
+  font-family: 'Trirong-Medium';
+  src: url('./assets/fonts/Trirong-Medium.ttf');
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  width: 100%;
+  color: #d2ad75;
+  background-color: #1d1a1b;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  font-family: 'NotoSansKR-Regular', sans-serif;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  color: #d2ad75;
 }
 </style>
