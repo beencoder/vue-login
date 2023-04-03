@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import FixedLayout from "../components/FixedLayout.vue";
+import FixedLayout from "./FixedLayout.vue";
 import store from "../vuex";
 
 export default {
-  name: "Main",
+  name: "MainView",
   components: {
     FixedLayout
   },
@@ -61,7 +61,7 @@ export default {
     }
   },
   created() {
-    if (window.location.pathname === "/index") {
+    if (window.location.pathname === "/") {
       setTimeout(() => {
         this.loadPage();
       }, 300);

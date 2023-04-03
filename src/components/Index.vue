@@ -1,16 +1,15 @@
 <template>
-  <Login />
+  <MainView />
 </template>
 
 <script>
 // component
-// import Main from "../components/Main.vue";
-import Login from "../components/Login.vue";
+import MainView from "../components/MainView.vue";
 
 export default {
   name: "Index",
   components: {
-    Login
+    MainView
   },
   data() {
     return {};

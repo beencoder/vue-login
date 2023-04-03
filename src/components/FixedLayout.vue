@@ -12,7 +12,7 @@
     <nav :class="{active: focusMenu}" class="nav">
       <ul class="menu">
         <li>
-          <router-link to="/index">home</router-link>
+          <router-link to="/">home</router-link>
         </li>
         <li v-if="!isLoggedIn">
           <router-link :to="{name: 'SignUp', params: {id: 'kimdabeen'}}">sign up</router-link>

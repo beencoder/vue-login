@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Index from "../components/Index.vue";
+import MainView from "../components/MainView.vue";
 import Login from "../components/Login.vue";
 import SignUp from "../components/SignUp.vue";
 import Edit from "../components/EditProfile.vue";
@@ -7,12 +7,8 @@ import Edit from "../components/EditProfile.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/index"
-  },
-  {
-    path: "/index",
-    name: "Index",
-    component: Index
+    name: "MainView",
+    component: MainView
   },
   {
     path: "/signUp",
@@ -33,7 +29,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(process.env.BASE_URL),
     routes
 })
 
