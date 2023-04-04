@@ -13,7 +13,6 @@
         <svg class="mouth" xmlns="http://www.w3.org/2000/svg" width="59" height="15" viewBox="0 0 59 15" fill="currentcolor">
           <path d="M29.5 15.0001C45.1967 15.0001 54.236 7.93116 59 1.55185L56.9845 0.00012195C51.3043 5.86219 42.6315 10.1151 29.5 10.1151C16.3685 10.1151 7.69565 5.86219 2.01553 0.000118672L-9.25456e-08 1.55184C4.76397 7.93115 13.8033 15.0001 29.5 15.0001Z" fill="#currentcolor"></path>
         </svg>
-        <!-- <span class="mouth"></span> -->
       </div>
     </div>
     <div class="container">
@@ -21,6 +20,7 @@
         <h2 class="title">publisher &</h2>
       </div>
     </div>
+
     <div class="container">
       <router-link  v-if="!isLoggedIn" class="round-box btn" to="/signUp">Sign Up</router-link>
       <router-link v-else @click="logout" class="round-box btn" to="/edit">Edit Info</router-link>
@@ -60,25 +60,22 @@ export default {
       return store.state.user || false;
     }
   },
-  created() {
-    if (window.location.pathname === "/") {
-      setTimeout(() => {
-        this.loadPage();
-      }, 300);
-    }
-  },
+  created() {},
   mounted() {
     this.moveElement();
+    this.loadPage();
   },
   methods: {
     loadPage() {
-      const titles = document.querySelectorAll(".title");
+      const titles = document.querySelectorAll(".title-inner h2.title");
       const roundBtn = document.querySelectorAll(".round-box");
 
-      for (let i = 0; i < titles.length; i++) {
-        const item = titles.item(i);
-        item.style.transform = "translate3d(0, 0, 0) rotateZ(0deg)";
-      }
+      setTimeout(() => {
+        for (let i = 0; i < titles.length; i++) {
+          const item = titles.item(i);
+          item.style.transform = "translate3d(0, 0, 0) rotateZ(0deg)";
+        }
+      }, 300);
 
       setTimeout(() => {
         for (let i = 0; i < roundBtn.length; i++) {
@@ -86,7 +83,7 @@ export default {
           item.style.opacity = "1";
           item.style.transform = "translateX(0)";
         }
-      }, 1100);
+      }, 1200);
     },
 
     moveElement() {
@@ -149,7 +146,7 @@ section {
   text-transform: uppercase;
   text-align: center;
   transform: translate3d(0, 140%, 0) rotateZ(7deg);
-  transition: transform 1s cubic-bezier(.05, .96, .8, .98);
+  transition: all 1s cubic-bezier(.05, .96, .8, .98);
 }
 .main .container:first-of-type .title-inner .title {
   font-size: 13.5rem;
@@ -172,16 +169,16 @@ section {
   z-index: 5;
   transition: transform .2s, color .2s;
 }
-.main .container:nth-of-type(1) .round-box {
+.main .container:first-of-type .round-box {
   left: -4%;
   justify-content: space-evenly;
   transform: translateY(-400%);
 }
-.main .container:nth-of-type(3) .round-box {
+.main .container:nth-of-type(3) .round-box.btn {
   right: -4%;
   transform: translateX(-400%);
 }
-.main .container:nth-of-type(4) .round-box {
+.main .container:nth-of-type(4) .round-box.btn {
   left: -5%;
   transform: translateX(400%);
 }
@@ -191,7 +188,7 @@ section {
 .main .container .round-box.btn:hover {
   color: #1d1a1b;
 }
-.main .container:not(:first-of-type) .round-box::before {
+.main .container .round-box.btn::before {
   content: "";
   position: absolute;
   left: 0;
@@ -202,7 +199,7 @@ section {
   transition: bottom .5s cubic-bezier(.05, .96, .8, .98);
   z-index: -1;
 }
-.main .container:not(:first-of-type) .round-box:hover::before {
+.main .container .round-box.btn:hover::before {
   bottom: 0;
 }
 .main .container .round-box .eye-inner {
@@ -252,7 +249,7 @@ section {
   .main .container:first-of-type .title-inner .title {
     font-size: 11.5rem;
   }
-  .main .container .round-box, .main .container:not(:first-of-type) .round-box::before {
+  .main .container .round-box, .main .container .round-box.btn::before {
     width: 13rem;
     height: 13rem;
   }
@@ -268,7 +265,7 @@ section {
   .main .container:first-of-type .title-inner .title {
     font-size: 8.5rem;
   }
-  .main .container .round-box, .main .container:not(:first-of-type) .round-box::before {
+  .main .container .round-box, .main .container .round-box.btn::before {
     width: 10rem;
     height: 10rem;
   }

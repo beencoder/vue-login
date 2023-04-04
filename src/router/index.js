@@ -1,5 +1,5 @@
 import { createWebHashHistory, createRouter } from "vue-router";
-import MainView from "../components/MainView.vue";
+import Index from "../components/Index.vue";
 import Login from "../components/Login.vue";
 import SignUp from "../components/SignUp.vue";
 import Edit from "../components/EditProfile.vue";
@@ -7,8 +7,12 @@ import Edit from "../components/EditProfile.vue";
 const routes = [
   {
     path: "/",
-    name: "MainView",
-    component: MainView
+    redirect: "/index",
+  },
+  {
+    path: "/index",
+    name: "Index",
+    component: Index
   },
   {
     path: "/signUp",
