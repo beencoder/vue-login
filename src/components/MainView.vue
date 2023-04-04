@@ -15,19 +15,22 @@
         </svg>
       </div>
     </div>
+
     <div class="container">
       <div class="title-inner">
         <h2 class="title">publisher &</h2>
       </div>
+      <router-link v-if="show" to="/signUp"></router-link>
     </div>
 
     <div class="container">
-      <router-link  v-if="!isLoggedIn" class="round-box btn" to="/signUp">Sign Up</router-link>
+      <router-link v-if="!isLoggedIn" class="round-box btn" to="/signUp">Sign Up</router-link>
       <router-link v-else @click="logout" class="round-box btn" to="/edit">Edit Info</router-link>
       <div class="title-inner">
         <h2 class="title">front-end</h2>
       </div>
     </div>
+
     <div class="container">
       <div class="title-inner">
         <h2 class="title">developer</h2>
@@ -53,6 +56,7 @@ export default {
   },
   data() {
     return {
+      show: false
     };
   },
   computed: {
@@ -67,7 +71,7 @@ export default {
   },
   methods: {
     loadPage() {
-      const titles = document.querySelectorAll(".title-inner h2.title");
+      const titles = document.querySelectorAll(".title-inner .title");
       const roundBtn = document.querySelectorAll(".round-box");
 
       setTimeout(() => {
@@ -88,7 +92,6 @@ export default {
 
     moveElement() {
       const eyes = document.querySelectorAll(".eye, .mouth");
-      // const roundBtn = document.querySelectorAll(".round-box");
       const limit = 15;
 
       const calcValue = (mouse, width) => {
@@ -152,7 +155,7 @@ section {
   font-size: 13.5rem;
   font-style: italic;
 }
-.main .container .round-box {
+.main .container *.round-box {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -169,16 +172,16 @@ section {
   z-index: 5;
   transition: transform .2s, color .2s;
 }
-.main .container:first-of-type .round-box {
+.main .container:first-of-type div.round-box {
   left: -4%;
   justify-content: space-evenly;
   transform: translateY(-400%);
 }
-.main .container:nth-of-type(3) .round-box.btn {
+.main .container:nth-of-type(3) *.round-box.btn {
   right: -4%;
   transform: translateX(-400%);
 }
-.main .container:nth-of-type(4) .round-box.btn {
+.main .container:nth-of-type(4) *.round-box.btn {
   left: -5%;
   transform: translateX(400%);
 }
@@ -304,5 +307,5 @@ section {
   .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
     font-size: 4.5rem;
   }
-}
+}   
 </style>
