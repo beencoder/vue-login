@@ -253,9 +253,6 @@ export default {
 }
 
 @media screen and (max-width: 480px) {
-  .main-wrap .header .member {
-    font-size: 1.2rem;
-  }
   .main-wrap .header .menu-btn {
     width: 3rem;
     height: 2rem;

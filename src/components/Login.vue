@@ -2,21 +2,23 @@
   <FixedLayout />
   <div class="login-wrap">
     <h3 class="page__title">login</h3>
-    <div class="inner">
-      <label for="email">아이디(이메일)</label>
-      <input type="email" id="email" :value="email" @input="e => (email = e.target.value)" placeholder="아이디(이메일)를 입력해주세요.">
-    </div>
-    <div class="inner">
-      <label for="password">비밀번호</label>
-      <input type="password" id="password" :value="password" @input="e => (password = e.target.value)" placeholder="비밀번호를 입력해주세요.">
-    </div>
+    <form novalidate>
+      <div class="inner">
+        <label for="email">아이디(이메일)</label>
+        <input type="email" id="email" :value="email" @input="e => (email = e.target.value)" placeholder="아이디(이메일)를 입력해주세요.">
+      </div>
+      <div class="inner">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" :value="password" @input="e => (password = e.target.value)" placeholder="비밀번호를 입력해주세요.">
+      </div>
 
-    <button class="guide" @click="openModal()">비밀번호를 잊으셨나요?</button>
+      <button class="guide" @click="openModal()">* 비밀번호를 잊으셨나요?</button>
 
-    <div class="right">
-      <button class="btn" @click="login">로그인</button>
-      <router-link class="btn" to="/signUp">가입하기</router-link>
-    </div>
+      <div class="right">
+        <button class="btn" @click="login">로그인</button>
+        <router-link class="btn" to="/signUp">가입하기</router-link>
+      </div>
+    </form>
   </div>
 
   <!-- 모달창 -->
@@ -132,8 +134,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100vh;
-  margin: 0 25%;
 }
 .login-wrap .page__title {
   font-size: 5rem;
@@ -141,6 +143,10 @@ export default {
   text-align: center;
   text-transform: uppercase;
   margin-bottom: 5rem;
+}
+.login-wrap form {
+  width: 65%;
+  max-width: 60rem;
 }
 .login-wrap .inner {
   display: flex;
@@ -161,7 +167,7 @@ export default {
   font-size: 1rem;
   text-align: left;
   color: #d2ad75;
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 3rem;
 }
 .login-wrap .right {
   display: flex;
@@ -192,9 +198,10 @@ export default {
 }
 .modal-wrap .modal {
   position: relative;
-  width: 40rem;
-  height: 18rem;
-  padding: 1.5rem;
+  width: 70%;
+  max-width: 50rem;
+  height: 22rem;
+  padding: 2.5rem;
   color: #1d1a1b;
   background-color: #d2ad75;
 }
@@ -203,22 +210,21 @@ export default {
   font-weight: bold;
   color: #1d1a1b;
   padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 3rem;
   border-bottom: 2px solid #1d1a1b;
 }
 .modal-wrap .modal input {
-  width: calc(100% - 2rem);
+  width: calc(100% - 2.5rem);
   padding: 1rem;
   font-size: 1.3rem;
-  margin-bottom: 0.5rem;
   color: #1d1a1b;
   border-bottom: 1px solid #1d1a1b;
   background-color: transparent;
 }
 .modal-wrap .modal .btn-wrap {
   position: absolute;
-  right: 1.5rem;
-  bottom: 1.5rem;
+  right: 2.5rem;
+  bottom: 2.5rem;
   display: flex;
   justify-content: flex-end;
 }
@@ -238,20 +244,31 @@ export default {
 
 /* 반응형 */
 @media screen and (max-width: 480px) {
-  .login-wrap {
-    margin: 0 12%;
-  }
   .login-wrap .page__title {
     font-size: 3.5rem;
   }
-  .login-wrap .inner label, .login-wrap .btn {
-    font-size: 1.3rem;
-  }
-  .login-wrap .inner input {
-    font-size: 1.2rem;
+  .login-wrap form {
+    width: 80%;
   }
   .login-wrap .inner:first-of-type input {
     margin-bottom: 1.5rem;
+  }
+  .modal-wrap .modal {
+    width: 80%;
+    height: 20rem;
+    padding: 2rem;
+  }
+  .modal-wrap .modal .modal__title {
+    font-size: 1.6rem;
+    margin-bottom: 2.5rem;
+  }
+  .modal-wrap .modal input {
+    width: calc(100% - 2rem);
+    padding: 1rem;
+  }
+  .modal-wrap .modal .btn-wrap {
+    right: 2rem;
+    bottom: 2rem;
   }
 }
 </style>

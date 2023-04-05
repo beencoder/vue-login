@@ -25,7 +25,7 @@
 
     <div class="container">
       <router-link v-if="!isLoggedIn" class="round-box btn" to="/signUp">Sign Up</router-link>
-      <router-link v-else @click="logout" class="round-box btn" to="/edit">Edit Info</router-link>
+      <router-link v-else class="round-box btn" to="/edit">Edit Info</router-link>
       <div class="title-inner">
         <h2 class="title">front-end</h2>
       </div>
@@ -110,9 +110,10 @@ export default {
     },
 
     logout() {
-      store.dispatch("logout").then(() => {
-        localStorage.removeItem("userInfo");
-        this.$router.push("/login");
+      store.dispatch("logout").then((res) => {
+        if (res) {
+          this.$router.push("/login");
+        }
       });
     }
   }

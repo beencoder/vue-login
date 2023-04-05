@@ -25,7 +25,7 @@
       </div>
     </form>
 
-    <div class="right">
+    <div class="btn-wrap">
       <button class="submit-btn" :class="{disable: activated === false}" @click="signUp" :disabled="activated !== true">회원가입</button>
     </div>
   </div>
@@ -138,8 +138,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100vh;
-  margin: 0 25%;
 }
 .signUp-wrap .page__title {
   font-size: 5rem;
@@ -147,6 +147,10 @@ export default {
   text-align: center;
   text-transform: uppercase;
   margin-bottom: 5rem;
+}
+.signUp-wrap form {
+  width: 65%;
+  max-width: 60rem;
 }
 .signUp-wrap .inner {
   display: flex;
@@ -159,11 +163,12 @@ export default {
 }
 .signUp-wrap .inner input {
   padding: 1rem;
-  margin-bottom: 0.5rem;
   font-size: 1.3rem;
 }
-.signUp-wrap .right {
-  text-align: right;
+.signUp-wrap .btn-wrap {
+  width: 65%;
+  max-width: 60rem;
+  margin-top: 1rem;
 }
 .signUp-wrap .submit-btn {
   width: 100%;
@@ -180,19 +185,13 @@ export default {
 /* 반응형 */
 @media screen and (max-width: 480px) {
   .signUp-wrap {
-    margin: 0 12%;
+    padding-top: 3rem;
   }
   .signUp-wrap .page__title {
     font-size: 3.5rem;
   }
-  .signUp-wrap .inner {
-    margin-bottom: 1.5rem;
-  }
-  .signUp-wrap .inner label, .signUp-wrap .submit-btn {
-    font-size: 1.3rem;
-  }
-  .signUp-wrap .inner input {
-    font-size: 1.2rem;
+  .signUp-wrap form, .signUp-wrap .btn-wrap {
+    width: 80%;
   }
 }
 </style>
