@@ -64,7 +64,9 @@ export default {
       return store.state.user || false;
     }
   },
-  created() {},
+  created() {
+    localStorage.clear();
+  },
   mounted() {
     this.moveElement();
     this.loadPage();
@@ -111,9 +113,7 @@ export default {
 
     logout() {
       store.dispatch("logout").then((res) => {
-        if (res) {
-          this.$router.push("/login");
-        }
+        if (res) this.$router.push("/login");
       });
     }
   }

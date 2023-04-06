@@ -87,8 +87,10 @@ export default {
         })
         .catch((err) => {
           switch (err.code) {
-            case "auth/user-not-found" || "auth/wrong-password":
-              return alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+            case "auth/user-not-found":
+              return alert("이메일이 일치하지 않습니다.");
+            case "auth/wrong-password":
+              return alert("비밀번호가 일치하지 않습니다.");
             case "auth/network-request-failed":
               return alert("네트워크 연결에 실패하였습니다.");
             case "auth/internal-error":

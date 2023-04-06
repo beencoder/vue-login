@@ -51,30 +51,35 @@ export default {
     }
   },
   created() {
+  },
+  mounted() {
     this.findUser();
   },
   methods: {
     findUser() {
-      const user = firebase.auth().currentUser;
-      if (user !== null) {
-        this.newNickName = user.displayName;
-        this.email = user.email;
-      }
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user !== null) {
+          this.newNickName = user.displayName;
+          this.email = user.email;
+          }
+      });
     },
 
     async changeName() {
-      const user = firebase.auth().currentUser;
-      if (user !== null) {
-        user.updateProfile({
-          displayName: this.newNickName
-        }).then(() => {
-          alert("프로필 수정을 완료하였습니다!");
-          store.state.user = this.newNickName;
-          this.$router.push("/index");
-        }).catch((err) => {
-          alert(err.message);
-        });
-      }
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user !== null) {
+          user.updateProfile({
+            displayName: this.newNickName
+          }).then(() => {
+            alert("프로필 수정을 완료하였습니다!");
+            store.state.user = this.newNickName;
+            sessionStorage.setItem("userInfo", this.newNickName);
+            this.$router.push("/index");
+          }).catch((err) => {
+            alert(err.message);
+          });
+        }
+      });
     }
   }
 };

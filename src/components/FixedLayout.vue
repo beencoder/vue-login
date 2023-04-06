@@ -70,9 +70,8 @@ export default {
     },
 
     logout() {
-      store.dispatch("logout").then(() => {
-        localStorage.removeItem("userInfo");
-        this.$router.push("/login");
+      store.dispatch("logout").then((res) => {
+        if (res) this.$router.push("/login");
       });
     }
   }

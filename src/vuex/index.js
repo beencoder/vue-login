@@ -4,8 +4,7 @@ import persistedstate from "vuex-persistedstate";
 
 export default new Vuex.Store({
   state: { // [변수 정의]
-    user: localStorage.getItem("userInfo"),
-    result: false
+    user: sessionStorage.getItem("userInfo")
   },
   getters: { // [state의 변수들을 get호출]
     getUser: (state) => {
@@ -15,12 +14,11 @@ export default new Vuex.Store({
   mutations: { // [변수들을 동기 처리하는 함수]
     login(state, info) {
       state.user = info;
-      localStorage.setItem("userInfo", info);
+      sessionStorage.setItem("userInfo", info);
     },
     logout(state) {
       state.user = null;
-      // state.result = result;
-      localStorage.removeItem("userInfo");
+      sessionStorage.removeItem("userInfo");
     }
   },
   actions: { // [비동기 처리하는 함수]
@@ -33,7 +31,7 @@ export default new Vuex.Store({
         return false;
       }
       commit("logout", { root: true });
-      localStorage.removeItem("userInfo");
+      sessionStorage.removeItem("userInfo");
       alert("로그아웃되었습니다.");
       return true;
     }

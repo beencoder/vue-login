@@ -57,8 +57,7 @@ export default {
       warningMessage1: false,
       warningMessage2: false,
       warningMessage3: false,
-      warningMessage4: false,
-      user: {}
+      warningMessage4: false
     };
   },
   watch: {
