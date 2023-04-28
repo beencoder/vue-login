@@ -265,5 +265,11 @@ export default {
   .main-wrap .side__left, .side__right {
     display: none;
   }
+  .main-wrap .header .menu-btn.active .menu-btn__line.top {
+    transform: translate3d(0, 0.5rem, 0);
+  }
+  .main-wrap .header .menu-btn.active .menu-btn__line.bottom {
+    transform: translate3d(0, -0.5rem, 0);
+  }
 }
 </style>

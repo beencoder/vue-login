@@ -83,7 +83,7 @@ export default {
             email: user.user.displayName
           });
           alert("[로그인 완료] 환영합니다!");
-          this.$router.push("/index");
+          this.$router.push("/");
         })
         .catch((err) => {
           switch (err.code) {

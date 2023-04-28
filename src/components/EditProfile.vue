@@ -74,7 +74,7 @@ export default {
             alert("프로필 수정을 완료하였습니다!");
             store.state.user = this.newNickName;
             sessionStorage.setItem("userInfo", this.newNickName);
-            this.$router.push("/index");
+            this.$router.push("/");
           }).catch((err) => {
             alert(err.message);
           });
