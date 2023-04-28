@@ -62,7 +62,7 @@ export default {
       let headerBottom = document.querySelector(".header").getBoundingClientRect().bottom; // 60
       let navBottom = document.querySelector(".nav").getBoundingClientRect().bottom; // 700
 
-      if (navBottom > 10) {
+      if (navBottom > 0) {
         this.changeColor = true;
       } else if (navBottom < headerBottom) {
         this.changeColor = false;
@@ -141,13 +141,13 @@ export default {
   align-items: center;
   position: fixed;
   left: 0;
-  top: -100%;
+  top: -110%;
   bottom: 0;
   width: 100vw;
   height: 100vh;
   background-color: #d2ad75;
   z-index: 50;
-  transition: top .9s .2s cubic-bezier(.99, .03, .66, .83);
+  transition: top 1.4s cubic-bezier(.99, .03, .66, .83);
 }
 .main-wrap .nav.active {
   top: 0;
