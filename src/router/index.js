@@ -7,10 +7,6 @@ import Edit from "../components/EditProfile.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/index",
-  },
-  {
-    path: "/index",
     name: "Index",
     component: Index
   },

@@ -147,7 +147,7 @@ export default {
   height: 100vh;
   background-color: #d2ad75;
   z-index: 50;
-  transition: top 1.4s cubic-bezier(.99, .03, .66, .83);
+  transition: top 1.2s cubic-bezier(.99, .03, .66, .83);
 }
 .main-wrap .nav.active {
   top: 0;
@@ -174,7 +174,7 @@ export default {
   font-style: italic;
   text-transform: uppercase;
   transform: translate3d(0, 140%, 0) rotateZ(7deg);
-  transition: transform 1.5s .1s cubic-bezier(.99, .03, .66, .83);
+  transition: transform 1.4s .4s cubic-bezier(.99, .03, .66, .83);
 }
 .main-wrap .nav .menu li:last-of-type > * {
   margin-bottom: 0;
