@@ -41,7 +41,7 @@
   </section>
 
   <section class="about">
-    <p class="about__text">안녕하세요. 김다빈입니다.</p>
+    <p class="about__text">안녕하세요:) 웹 퍼블리셔에서 프론트엔드 개발자가 되기 위해 도전하는 김다빈입니다.<br>사람들과 대화하는 것을 좋아하며, 계획에 따라 꼼꼼히 업무 처리하는 것이 저의 장점이라고 생각합니다. 매일 바뀌는 웹 환경에서 살아 남기 위해 새로운 트렌드를 놓치지 않도록 열심히 노력하겠습니다.</p>
   </section>
 </template>
 
@@ -226,9 +226,13 @@ section {
   height: 0.5rem;
   background-color: #d2ad75;
 } */
-
-.about__text {
+.about {
+  padding: 20px 0;
+}
+.about .about__text {
+  width: 50%;
   font-size: 2rem;
+  line-height: 2;
 }
 
 /* animation */
@@ -285,7 +289,7 @@ section {
 
 @media screen and (max-width: 768px) {
   section {
-    height: 80vh;
+    height: 90vh;
   }
   .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
     font-size: 6.8rem;
@@ -300,11 +304,11 @@ section {
   .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
     font-size: 6rem;
   }
+  .about .about__text {
+    width: 70%;
+  }
 }
 @media screen and (max-width: 480px) {
-  section {
-    height: 75vh;
-  }
   .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
     font-size: 4.5rem;
   }
