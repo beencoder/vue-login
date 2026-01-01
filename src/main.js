@@ -2,9 +2,9 @@ import { createApp } from 'vue';
 import App from "./App.vue";
 import router from "./router";
 import { createPinia } from 'pinia';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useAuthStore } from '@/stores/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAcgKVRK7v00jclp87pDpnXBJPVNmafkLw",
@@ -17,27 +17,29 @@ const firebaseConfig = {
   measurementId: "G-32GP3JZB8V"
 };
 
+// Firebase 초기화
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
-const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
+const pinia = createPinia();
 app.use(pinia);
-app.use(router);
 
-// Firebase 인증 상태가 결정된 후에 마운트
-onAuthStateChanged(auth, () => {
-  if (!app._instance) {
-    app.mount('#app');
+// 인증 상태 감지
+const authStore = useAuthStore();
+
+let isAppMounted = false;
+
+onAuthStateChanged(auth, (firebaseUser) => {
+  if (firebaseUser) {
+    authStore.setUser(firebaseUser);
+  } else {
+    authStore.clearUser(); 
   }
-});
 
-// 다른 탭에서의 로그인/로그아웃 상태 변화 감지
-window.addEventListener('storage', (event) => {
-  if (event.key === 'userInfo' || event.key?.includes('auth')) {
-    if (event.oldValue !== event.newValue) {
-      window.location.reload();
-    }
+  if (!isAppMounted) {
+    app.use(router);
+    app.mount('#app');
+    isAppMounted = true;
   }
 });

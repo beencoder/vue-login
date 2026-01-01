@@ -68,9 +68,11 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useAuthStore } from '@/stores/auth';
 import FixedLayout from "../components/FixedLayout.vue";
 
 const router = useRouter();
+const authStore = useAuthStore();
 const auth = getAuth();
 
 const nickName = ref("");
@@ -98,17 +100,28 @@ const signUp = async () => {
   if (!isFormValid.value) return;
 
   try {
+    // 계정 생성
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
-    await updateProfile(userCredential.user, { displayName: nickName.value });
+    const user = userCredential.user;
+
+    // 닉네임 프로필 업데이트
+    await updateProfile(user, { displayName: nickName.value });
+
+    // 스토어 업데이트
+    authStore.setUser({
+      ...user,
+      displayName: nickName.value
+    });
 
     alert("[회원가입 완료] 환영합니다!");
-    router.push("/login");
+    router.push("/"); 
   } catch (err) {
     const messages = {
       "auth/email-already-in-use": "이미 사용 중인 이메일입니다.",
       "auth/invalid-email": "잘못된 이메일 형식입니다.",
+      "auth/weak-password": "비밀번호가 너무 취약합니다."
     };
-    alert(messages[err.code] || "오류 발생: " + err.message);
+    alert(messages[err.code] || "오류가 발생했습니다: " + err.message);
   }
 };
 </script>

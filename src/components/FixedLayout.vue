@@ -1,14 +1,14 @@
 <template>
   <div class="main-wrap">
-    <header :class="{ active: changeColor }" class="header">
+    <header :class="{ active: focusMenu || changeColor }" class="header">
       <p class="member">
-        <span v-if="userName" class="member__name">{{ userName }}</span>
+        <span v-if="isLoggedIn" class="member__name">{{ authStore.userNickname }}</span>
         <span v-else class="member__name">방문자</span>님, 반가워요 😊
       </p>
       
       <div @click="focusMenu = !focusMenu" :class="{ active: focusMenu }" class="menu-btn">
-        <span :class="{ active: changeColor }" class="menu-btn__line top"></span>
-        <span :class="{ active: changeColor }" class="menu-btn__line bottom"></span>
+        <span :class="{ active: focusMenu || changeColor }" class="menu-btn__line top"></span>
+        <span :class="{ active: focusMenu || changeColor }" class="menu-btn__line bottom"></span>
       </div>
     </header>
     
@@ -20,7 +20,7 @@
           <router-link to="/" @click="focusMenu = false">home</router-link>
         </li>
         <li v-if="!isLoggedIn">
-          <router-link :to="{ name: 'SignUp', params: { id: 'kimdabeen' } }" @click="focusMenu = false">sign up</router-link>
+          <router-link to="/signUp" @click="focusMenu = false">sign up</router-link>
         </li>
         <li v-else>
           <router-link to="/edit" @click="focusMenu = false">edit info</router-link>
@@ -43,39 +43,36 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { getAuth, signOut } from "firebase/auth";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const auth = getAuth();
 
 const focusMenu = ref(false);
 const changeColor = ref(false);
 
 // 유효성 검사
-const userName = computed(() => authStore.user);
 const isLoggedIn = computed(() => authStore.isLoggedIn);
 
+// 헤더 색상 변경
 const touchContent = () => {
-  const headerElement = document.querySelector(".header");
   const navElement = document.querySelector(".nav");
-  
-  if (!headerElement || !navElement) return;
+  if (!navElement) return;
 
-  const headerBottom = headerElement.getBoundingClientRect().bottom;
-  const navBottom = navElement.getBoundingClientRect().bottom;
-
-  if (navBottom > 0) {
-    changeColor.value = true;
-  } 
-  else if (navBottom < headerBottom) {
-    changeColor.value = false;
-  }
+  const navTop = navElement.getBoundingClientRect().top;
+  changeColor.value = navTop >= 0;
 };
 
 const handleLogout = async () => {
-  const success = await authStore.logout();
-  if (success) {
-    focusMenu.value = false; 
+  if (!confirm("로그아웃 하시겠습니까?")) return;
+
+  try {
+    await signOut(auth); 
+    alert("로그아웃되었습니다.");
     router.push("/login");
+  } catch (error) {
+    console.error("로그아웃 에러:", error);
   }
 };
 

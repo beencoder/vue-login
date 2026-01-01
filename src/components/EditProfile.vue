@@ -41,7 +41,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAuth, updateProfile } from "firebase/auth";
 import { useAuthStore } from '@/stores/auth';
-import { getCurrentUser } from '@/services/auth';
 import FixedLayout from "../components/FixedLayout.vue";
 
 const router = useRouter();
@@ -50,28 +49,24 @@ const auth = getAuth();
 
 const newNickName = ref("");
 const email = ref("");
-const currentDisplayName = ref("");
 const isLoading = ref(true);
 
 // 유효성 검사
-const warningMessage = computed(() => newNickName.value !== "" && newNickName.value.length < 2);
-const isButtonDisabled = computed(() => {
-  return warningMessage.value || newNickName.value === "" || newNickName.value === currentDisplayName.value;
+const warningMessage = computed(() => {
+  return newNickName.value.length > 0 && newNickName.value.length < 2;
 });
 
-onMounted(async () => {
-  try {
-    const user = await getCurrentUser();
-    
-    if (user) {
-      newNickName.value = user.displayName || "";
-      email.value = user.email || "";
-      isLoading.value = false; 
-    } else {
-      authStore.logout();
-      router.push("/login");
-    }
-  } catch (error) {
+const isButtonDisabled = computed(() => {
+  const currentDisplayName = authStore.user?.displayName || "";
+  return warningMessage.value || !newNickName.value || newNickName.value === currentDisplayName;
+});
+
+onMounted(() => {
+  if (authStore.user) {
+    newNickName.value = authStore.user.displayName || "";
+    email.value = authStore.user.email || "";
+    isLoading.value = false;
+  } else {
     router.push("/login");
   }
 });
@@ -79,20 +74,24 @@ onMounted(async () => {
 const changeName = async () => {
   if (isButtonDisabled.value) return;
 
-  const user = auth.currentUser;
-  if (user) {
-    try {
+  try {
+    const user = auth.currentUser;
+    if (user) {
       await updateProfile(user, {
         displayName: newNickName.value
       });
 
-      authStore.login(newNickName.value);
+      authStore.setUser({
+        ...user,
+        displayName: newNickName.value
+      });
       
       alert("프로필 수정을 완료하였습니다!");
       router.push("/");
-    } catch (err) {
-      alert("수정 중 오류가 발생했습니다: " + err.message);
     }
+  } catch (err) {
+    console.error("닉네임 변경 에러:", err);
+    alert("수정 중 오류가 발생했습니다.");
   }
 };
 </script>
@@ -141,28 +140,27 @@ const changeName = async () => {
   font-size: 1.6rem;
   font-weight: bold;
   background-color: #d2ad75;
+  border: none;
+  cursor: pointer;
 }
 .edit-wrap .submit-btn.disable {
   color: #a1a1a1;
   background-color: #d4d4d4;
+  cursor: not-allowed;
+}
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 2rem;
 }
 
 /* 반응형 */
 @media screen and (max-width: 480px) {
-  .edit-wrap {
-    margin: 0 12%;
-  }
-  .edit-wrap .page__title {
-    font-size: 3.5rem;
-  }
-  .edit-wrap .inner {
-    margin-bottom: 1.5rem;
-  }
-  .edit-wrap .inner label, .edit-wrap .submit-btn {
-    font-size: 1.3rem;
-  }
-  .edit-wrap .inner input {
-    font-size: 1.2rem;
-  }
+  .edit-wrap { margin: 0 12%; }
+  .edit-wrap .page__title { font-size: 3.5rem; }
+  .edit-wrap .inner label, .edit-wrap .submit-btn { font-size: 1.3rem; }
+  .edit-wrap .inner input { font-size: 1.2rem; }
 }
 </style>

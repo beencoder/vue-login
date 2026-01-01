@@ -48,11 +48,13 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { getAuth, signOut } from "firebase/auth"; 
 import { useAuthStore } from '@/stores/auth';
 import FixedLayout from "../components/FixedLayout.vue";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const auth = getAuth(); 
 const show = ref(false);
 
 const loadPage = () => {
@@ -76,10 +78,7 @@ const loadPage = () => {
 const moveElement = (e) => {
   const eyes = document.querySelectorAll(".eye, .mouth");
   const limit = 15;
-
-  const calcValue = (mouse, size) => {
-    return (((mouse / size) * limit) - (limit / 2)).toFixed(1);
-  };
+  const calcValue = (mouse, size) => (((mouse / size) * limit) - (limit / 2)).toFixed(1);
 
   const xValue = calcValue(e.clientX, window.innerWidth);
   const yValue = calcValue(e.clientY, window.innerHeight);
@@ -89,20 +88,29 @@ const moveElement = (e) => {
   });
 };
 
+// 로그아웃
 const handleLogout = async () => {
-  const success = await authStore.logout();
-  if (success) router.push("/login");
+  if (!confirm("로그아웃 하시겠습니까?")) return;
+
+  try {
+    await signOut(auth); 
+    
+    // 스토어 비우기
+    authStore.clearUser(); 
+    
+    alert("로그아웃되었습니다.");
+    router.push("/login");
+  } catch (error) {
+    console.error("로그아웃 에러:", error);
+    alert("로그아웃 처리 중 오류가 발생했습니다.");
+  }
 };
 
 onMounted(() => {
-  // 초기화
-  localStorage.removeItem("userInfo");
-  
   loadPage();
   window.addEventListener("mousemove", moveElement);
 });
 
-// 메모리 누수 방지
 onUnmounted(() => {
   window.removeEventListener("mousemove", moveElement);
 });
@@ -223,7 +231,6 @@ section {
   line-height: 2;
 }
 
-/* animation */
 @keyframes eyes {
   0%, 60% {
     height: 1.5rem;

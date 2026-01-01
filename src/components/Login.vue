@@ -83,20 +83,21 @@ const handleLogin = async () => {
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
-    const user = userCredential.user;
-
-    authStore.login(user.displayName || user.email);
     
-    alert("[로그인 완료] 환영합니다!");
+    // 유저 객체 전체 넘기기
+    authStore.setUser(userCredential.user);
+    
+    alert(`[로그인 완료] ${userCredential.user.displayName || '사용자'}님 환영합니다!`);
     router.push("/");
   } catch (err) {
     const messages = {
-      "auth/user-not-found": "이메일이 일치하지 않습니다.",
+      "auth/user-not-found": "등록되지 않은 이메일입니다.",
       "auth/wrong-password": "비밀번호가 일치하지 않습니다.",
-      "auth/network-request-failed": "네트워크 연결에 실패하였습니다.",
-      "auth/internal-error": "잘못된 요청입니다."
+      "auth/invalid-email": "이메일 형식이 올바르지 않습니다.",
+      "auth/network-request-failed": "네트워크 연결에 실패하였습니다."
     };
-    alert(messages[err.code] || err.message);
+    alert(messages[err.code] || "로그인 중 오류가 발생했습니다.");
+    console.error(err.code);
   }
 };
 
@@ -106,23 +107,19 @@ const handleResetPassword = async () => {
     alert("비밀번호 재설정 메일을 보냈습니다! 메일함을 확인해주세요.");
     closeModal();
   } catch (err) {
-    const messages = {
-      "auth/user-not-found": "가입되어 있지 않은 이메일입니다.",
-      "auth/invalid-email": "올바르지 않은 이메일 양식입니다."
-    };
-    alert(messages[err.code] || err.message);
+    alert("메일 전송에 실패했습니다. 이메일 주소를 확인해주세요.");
   }
 };
 
 const openModal = () => {
   showModal.value = true;
-  document.body.classList.add("scroll-off");
+  document.body.style.overflow = "hidden";
 };
 
 const closeModal = () => {
   showModal.value = false;
-  modalEmail.value = ""; // 초기화
-  document.body.classList.remove("scroll-off");
+  modalEmail.value = "";
+  document.body.style.overflow = "auto";
 };
 </script>
 

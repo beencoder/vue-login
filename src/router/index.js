@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { getCurrentUser } from '@/services/auth';
+import { useAuthStore } from '@/stores/auth';
 
 const routes = [
   {
@@ -33,25 +33,17 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach(async (to, from, next) => {
-  const user = await getCurrentUser();
-  
-  console.log("Guard Auth Check:", user ? user.email : "No User");
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  const isLoggedIn = authStore.isLoggedIn;
 
-  const isLoggedIn = !!user;
-  const isGuestOnlyPage = to.meta.guestOnly; 
-  const isAuthRequiredPage = to.meta.requiresAuth;
-
-  // 이미 로그인했는데 가입/로그인 페이지 가려고 할 때
-  if (isGuestOnlyPage && isLoggedIn) {
-    alert("이미 로그인된 상태입니다.");
-    return next('/');
-  }
-
-  // 로그인 안 했는데 수정 페이지 가려고 할 때
-  if (isAuthRequiredPage && !isLoggedIn) {
+  if (to.meta.requiresAuth && !isLoggedIn) {
     alert("로그인이 필요합니다.");
     return next('/login');
+  }
+
+  if (to.meta.guestOnly && isLoggedIn) {
+    return next('/');
   }
 
   next();
