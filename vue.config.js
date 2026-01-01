@@ -3,8 +3,7 @@ const webpack = require('webpack')
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  outputDir: './docs',
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: '/',
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
