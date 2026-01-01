@@ -126,6 +126,9 @@ section {
   height: 100vh;
   border-bottom: 1px solid #d2ad75;
 }
+section:nth-of-type(2) {
+  height: 50vh;
+}
 .main {
   padding-top: 6rem;
 }
@@ -139,7 +142,7 @@ section {
   padding: 0 2rem;
 }
 .main .container .title-inner .title {
-  font-size: 14rem;
+  font-size: 13rem;
   line-height: 1;
   letter-spacing: -0.2rem;
   font-family: 'Trirong-Regular', serif;
@@ -149,7 +152,6 @@ section {
   transition: all 1s cubic-bezier(.05, .96, .8, .98);
 }
 .main .container:first-of-type .title-inner .title {
-  font-size: 13.5rem;
   font-style: italic;
 }
 .main .container *.round-box {
@@ -226,8 +228,8 @@ section {
   padding: 20px 0;
 }
 .about .about__text {
-  width: 50%;
-  font-size: 2rem;
+  width: 70%;
+  font-size: 1.8rem;
   line-height: 2;
 }
 
@@ -245,12 +247,9 @@ section {
 }
 
 /* 반응형 */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1280px) {
   .main .container .title-inner .title {
-    font-size: 12rem;
-  }
-  .main .container:first-of-type .title-inner .title {
-    font-size: 11.5rem;
+    font-size: 10rem;
   }
   .main .container .round-box, .main .container .round-box.btn::before {
     width: 13rem;
@@ -259,14 +258,11 @@ section {
 }
 
 @media screen and (max-width: 1024px) {
-  section {
+  section:first-of-type {
     height: 90vh;
   }
   .main .container .title-inner .title {
-    font-size: 9rem;
-  }
-  .main .container:first-of-type .title-inner .title {
-    font-size: 8.5rem;
+    font-size: 8rem;
   }
   .main .container .round-box, .main .container .round-box.btn::before {
     width: 10rem;
@@ -283,29 +279,29 @@ section {
 }
 
 @media screen and (max-width: 768px) {
-  section {
-    height: 90vh;
+  section:first-of-type {
+    height: 70vh;
+  }
+  section:nth-of-type(2) {
+  height: 80vh;
+}
+  .main .container .title-inner .title {
+    font-size: 4.8rem;
   }
   .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
-    font-size: 6.8rem;
-    line-height: 1.1;
+    line-height: 1.5;
   }
   .main .container .round-box {
     display: none;
   }
 }
 
-@media screen and (max-width: 540px) {
-  .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
-    font-size: 6rem;
+@media screen and (max-width: 480px) {
+  .main .container .title-inner .title {
+    font-size: 3.8rem;
   }
   .about .about__text {
-    width: 70%;
-  }
-}
-@media screen and (max-width: 480px) {
-  .main .container .title-inner .title, .main .container:first-of-type .title-inner .title {
-    font-size: 4.5rem;
+    width: 85%;
   }
 }   
 </style>

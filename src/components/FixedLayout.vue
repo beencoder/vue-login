@@ -106,7 +106,7 @@ onUnmounted(() => {
   border-bottom-color: #1d1a1b;
 }
 .main-wrap .header .member {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin-right: 3rem;
 }
 .main-wrap .header.active .member {
