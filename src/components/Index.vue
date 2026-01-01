@@ -3,7 +3,6 @@
 </template>
 
 <script>
-// component
 import MainView from "../components/MainView.vue";
 
 export default {

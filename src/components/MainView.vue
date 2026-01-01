@@ -18,13 +18,13 @@
 
     <div class="container">
       <div class="title-inner">
-        <h2 class="title">publisher &</h2>
+        <h2 class="title">ui developer &</h2>
       </div>
       <router-link v-if="show" to="/signUp"></router-link>
     </div>
 
     <div class="container">
-      <router-link v-if="!isLoggedIn" class="round-box btn" to="/signUp">Sign Up</router-link>
+      <router-link v-if="!authStore.isLoggedIn" class="round-box btn" to="/signUp">Sign Up</router-link>
       <router-link v-else class="round-box btn" to="/edit">Edit Info</router-link>
       <div class="title-inner">
         <h2 class="title">front-end</h2>
@@ -35,89 +35,77 @@
       <div class="title-inner">
         <h2 class="title">developer</h2>
       </div>
-      <router-link v-if="!isLoggedIn" class="round-box btn" to="/login">Login</router-link>
-      <button v-else @click="logout" class="round-box btn">Logout</button>
+      <router-link v-if="!authStore.isLoggedIn" class="round-box btn" to="/login">Login</router-link>
+      <button v-else @click="handleLogout" class="round-box btn">Logout</button>
     </div>
   </section>
 
   <section class="about">
-    <p class="about__text">안녕하세요:) 웹 퍼블리셔에서 프론트엔드 개발자가 되기 위해 도전하는 김다빈입니다.<br>사람들과 대화하는 것을 좋아하며, 계획에 따라 꼼꼼히 업무 처리하는 것이 저의 장점이라고 생각합니다. 매일 바뀌는 웹 환경에서 살아 남기 위해 새로운 트렌드를 놓치지 않도록 열심히 노력하겠습니다.</p>
+    <p class="about__text">안녕하세요, 마크업 위에 GSAP과 다양한 API로 생동감을 불어넣는 UI 개발자 김다빈입니다. <br>계획적인 성격 덕분에 탭, 아코디언 하나를 만들어도 예외 케이스까지 꼼꼼히 챙기는 것을 좋아합니다. 단순히 기능만 구현하는 데 그치지 않고, MongoDB나 Firebase 같은 데이터를 연결해 서비스의 완성도를 높이는 과정에서 즐거움을 찾고 있습니다. 매일 쏟아지는 새로운 기술들 속에서도 기본기를 잃지 않고 유연하게 소통하며 함께 성장하고 싶습니다.</p>
   </section>
 </template>
 
-<script>
-import FixedLayout from "./FixedLayout.vue";
-import store from "../vuex";
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import FixedLayout from "../components/FixedLayout.vue";
 
-export default {
-  name: "MainView",
-  components: {
-    FixedLayout
-  },
-  data() {
-    return {
-      show: false
-    };
-  },
-  computed: {
-    isLoggedIn() {
-      return store.state.user || false;
-    }
-  },
-  created() {
-    localStorage.clear();
-  },
-  mounted() {
-    this.moveElement();
-    this.loadPage();
-  },
-  methods: {
-    loadPage() {
-      const titles = document.querySelectorAll(".title-inner .title");
-      const roundBtn = document.querySelectorAll(".round-box");
+const router = useRouter();
+const authStore = useAuthStore();
+const show = ref(false);
 
-      setTimeout(() => {
-        for (let i = 0; i < titles.length; i++) {
-          const item = titles.item(i);
-          item.style.transform = "translate3d(0, 0, 0) rotateZ(0deg)";
-        }
-      }, 300);
+const loadPage = () => {
+  const titles = document.querySelectorAll(".title-inner .title");
+  const roundBtn = document.querySelectorAll(".round-box");
 
-      setTimeout(() => {
-        for (let i = 0; i < roundBtn.length; i++) {
-          const item = roundBtn.item(i);
-          item.style.opacity = "1";
-          item.style.transform = "translateX(0)";
-        }
-      }, 1200);
-    },
+  setTimeout(() => {
+    titles.forEach(item => {
+      item.style.transform = "translate3d(0, 0, 0) rotateZ(0deg)";
+    });
+  }, 300);
 
-    moveElement() {
-      const eyes = document.querySelectorAll(".eye, .mouth");
-      const limit = 15;
-
-      const calcValue = (mouse, width) => {
-        return (((mouse / width) * limit) - (limit / 2)).toFixed(1);
-      };
-
-      const xValue = e => calcValue(e.x, window.innerWidth);
-      const yValue = e => calcValue(e.y, window.innerHeight);
-
-      document.addEventListener("mousemove", (e) => {
-        [...eyes].forEach((item) => {
-          item.setAttribute("ry", "7.5");
-          item.style.transform = `translateX(${xValue(e) * 0.8}px) translateY(${yValue(e) * 0.8}px)`;
-        });
-      }, false);
-    },
-
-    logout() {
-      store.dispatch("logout").then((res) => {
-        if (res) this.$router.push("/login");
-      });
-    }
-  }
+  setTimeout(() => {
+    roundBtn.forEach(item => {
+      item.style.opacity = "1";
+      item.style.transform = "translateX(0)";
+    });
+  }, 1200);
 };
+
+const moveElement = (e) => {
+  const eyes = document.querySelectorAll(".eye, .mouth");
+  const limit = 15;
+
+  const calcValue = (mouse, size) => {
+    return (((mouse / size) * limit) - (limit / 2)).toFixed(1);
+  };
+
+  const xValue = calcValue(e.clientX, window.innerWidth);
+  const yValue = calcValue(e.clientY, window.innerHeight);
+
+  eyes.forEach((item) => {
+    item.style.transform = `translateX(${xValue * 0.8}px) translateY(${yValue * 0.8}px)`;
+  });
+};
+
+const handleLogout = async () => {
+  const success = await authStore.logout();
+  if (success) router.push("/login");
+};
+
+onMounted(() => {
+  // 초기화
+  localStorage.removeItem("userInfo");
+  
+  loadPage();
+  window.addEventListener("mousemove", moveElement);
+});
+
+// 메모리 누수 방지
+onUnmounted(() => {
+  window.removeEventListener("mousemove", moveElement);
+});
 </script>
 
 <style scoped>

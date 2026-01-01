@@ -1,11 +1,18 @@
 <template>
   <FixedLayout />
-  <div class="edit-wrap">
+  <div v-if="!isLoading" class="edit-wrap">
     <h3 class="page__title">edit info</h3>
-    <form novalidate>
+    <form @submit.prevent="changeName" novalidate>
       <div class="inner">
         <label for="nickName">닉네임</label>
-        <input type="text" id="nickName" :value="newNickName" @input="e => (newNickName = e.target.value)" placeholder="닉네임을 입력해주세요. (2~9자)" maxlength="9">
+        <input 
+          type="text" 
+          id="nickName" 
+          :value="newNickName" 
+          @input="e => newNickName = e.target.value" 
+          placeholder="닉네임을 입력해주세요. (2~9자)" 
+          maxlength="9"
+        >
         <span v-show="warningMessage" class="message">닉네임은 최소 2자리 이상이어야 합니다.</span>
       </div>
       <div class="inner">
@@ -15,71 +22,76 @@
     </form>
 
     <div class="right">
-      <button class="submit-btn" :class="{disable: warningMessage || newNickName === ''}" @click="changeName" :disabled="warningMessage || newNickName === ''">회원정보 수정</button>
+      <button 
+        class="submit-btn" 
+        :class="{ disable: isButtonDisabled }" 
+        @click="changeName" 
+        :disabled="isButtonDisabled"
+      >회원정보 수정</button>
     </div>
+  </div>
+
+  <div v-else class="loading-state">
+    <p>정보를 확인 중입니다...</p>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { getAuth, updateProfile } from "firebase/auth";
+import { useAuthStore } from '@/stores/auth';
+import { getCurrentUser } from '@/services/auth';
 import FixedLayout from "../components/FixedLayout.vue";
-import firebase from "firebase/app";
-import "firebase/auth";
-import store from "../vuex";
 
-export default {
-  name: "Edit",
-  components: {
-    FixedLayout
-  },
-  props: {
-    id: {
-      type: String,
-      default: "방문자"
-    }
-  },
-  data() {
-    return {
-      newNickName: "",
-      email: "",
-      warningMessage: false
-    };
-  },
-  watch: {
-    newNickName: function (value) {
-      if (value !== "" && value.length < 2) this.warningMessage = true;
-      else this.warningMessage = false;
-    }
-  },
-  created() {
-  },
-  mounted() {
-    this.findUser();
-  },
-  methods: {
-    findUser() {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user !== null) {
-          this.newNickName = user.displayName;
-          this.email = user.email;
-          }
-      });
-    },
+const router = useRouter();
+const authStore = useAuthStore();
+const auth = getAuth();
 
-    async changeName() {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user !== null) {
-          user.updateProfile({
-            displayName: this.newNickName
-          }).then(() => {
-            alert("프로필 수정을 완료하였습니다!");
-            store.state.user = this.newNickName;
-            sessionStorage.setItem("userInfo", this.newNickName);
-            this.$router.push("/");
-          }).catch((err) => {
-            alert(err.message);
-          });
-        }
+const newNickName = ref("");
+const email = ref("");
+const currentDisplayName = ref("");
+const isLoading = ref(true);
+
+// 유효성 검사
+const warningMessage = computed(() => newNickName.value !== "" && newNickName.value.length < 2);
+const isButtonDisabled = computed(() => {
+  return warningMessage.value || newNickName.value === "" || newNickName.value === currentDisplayName.value;
+});
+
+onMounted(async () => {
+  try {
+    const user = await getCurrentUser();
+    
+    if (user) {
+      newNickName.value = user.displayName || "";
+      email.value = user.email || "";
+      isLoading.value = false; 
+    } else {
+      authStore.logout();
+      router.push("/login");
+    }
+  } catch (error) {
+    router.push("/login");
+  }
+});
+
+const changeName = async () => {
+  if (isButtonDisabled.value) return;
+
+  const user = auth.currentUser;
+  if (user) {
+    try {
+      await updateProfile(user, {
+        displayName: newNickName.value
       });
+
+      authStore.login(newNickName.value);
+      
+      alert("프로필 수정을 완료하였습니다!");
+      router.push("/");
+    } catch (err) {
+      alert("수정 중 오류가 발생했습니다: " + err.message);
     }
   }
 };
@@ -103,24 +115,30 @@ export default {
 .edit-wrap .inner {
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
+  margin-bottom: 2.4rem;
 }
 .edit-wrap .inner label {
-  margin-bottom: 1rem;
-  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.5rem;
 }
 .edit-wrap .inner input {
   padding: 1rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+}
+.edit-wrap .inner .message {
+  display: block;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #ff4d4d;
 }
 .edit-wrap .right {
+  margin-top: .6rem;
   text-align: right;
 }
 .edit-wrap .submit-btn {
   width: 100%;
-  padding: 1rem 0;
-  font-size: 1.4rem;
+  padding: 1.4rem 0;
+  font-size: 1.6rem;
   font-weight: bold;
   background-color: #d2ad75;
 }

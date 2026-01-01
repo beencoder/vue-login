@@ -1,30 +1,35 @@
 <template>
   <div class="main-wrap">
-    <header :class="{active: changeColor}" class="header">
-      <p class="member"><span v-if="userName" class="member__name">{{ userName }}</span><span v-else class="member__name">방문자</span>님, 반가워요 :)</p>
-      <div @click="focusMenu = !focusMenu" :class="{active: focusMenu}" class="menu-btn">
-        <span :class="{active: changeColor}" class="menu-btn__line top"></span>
-        <span :class="{active: changeColor}" class="menu-btn__line bottom"></span>
+    <header :class="{ active: changeColor }" class="header">
+      <p class="member">
+        <span v-if="userName" class="member__name">{{ userName }}</span>
+        <span v-else class="member__name">방문자</span>님, 반가워요 😊
+      </p>
+      
+      <div @click="focusMenu = !focusMenu" :class="{ active: focusMenu }" class="menu-btn">
+        <span :class="{ active: changeColor }" class="menu-btn__line top"></span>
+        <span :class="{ active: changeColor }" class="menu-btn__line bottom"></span>
       </div>
     </header>
+    
     <div class="header__bg"></div>
 
-    <nav :class="{active: focusMenu}" class="nav">
+    <nav :class="{ active: focusMenu }" class="nav">
       <ul class="menu">
         <li>
-          <router-link to="/">home</router-link>
+          <router-link to="/" @click="focusMenu = false">home</router-link>
         </li>
         <li v-if="!isLoggedIn">
-          <router-link :to="{name: 'SignUp', params: {id: 'kimdabeen'}}">sign up</router-link>
+          <router-link :to="{ name: 'SignUp', params: { id: 'kimdabeen' } }" @click="focusMenu = false">sign up</router-link>
         </li>
         <li v-else>
-          <router-link to="/edit">edit info</router-link>
+          <router-link to="/edit" @click="focusMenu = false">edit info</router-link>
         </li>
         <li v-if="!isLoggedIn">
-           <router-link to="/login">login</router-link>
+          <router-link to="/login" @click="focusMenu = false">login</router-link>
         </li>
         <li v-else>
-          <button @click="logout">logout</button>
+          <button @click="handleLogout">logout</button>
         </li>
       </ul>
     </nav>
@@ -34,48 +39,53 @@
   </div>
 </template>
 
-<script>
-import store from "../vuex";
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
-export default {
-  name: "FixedLayout",
-  data() {
-    return {
-      userName: store.state.user,
-      focusMenu: false,
-      login: false,
-      changeColor: false
-    };
-  },
-  computed: {
-    isLoggedIn() {
-      return store.state.user || false;
-    }
-  },
-  created() {
-  },
-  mounted() {
-    window.addEventListener("transitionend", this.touchContent);
-  },
-  methods: {
-    touchContent() {
-      let headerBottom = document.querySelector(".header").getBoundingClientRect().bottom; // 60
-      let navBottom = document.querySelector(".nav").getBoundingClientRect().bottom; // 700
+const router = useRouter();
+const authStore = useAuthStore();
 
-      if (navBottom > 0) {
-        this.changeColor = true;
-      } else if (navBottom < headerBottom) {
-        this.changeColor = false;
-      }
-    },
+const focusMenu = ref(false);
+const changeColor = ref(false);
 
-    logout() {
-      store.dispatch("logout").then((res) => {
-        if (res) this.$router.push("/login");
-      });
-    }
+// 유효성 검사
+const userName = computed(() => authStore.user);
+const isLoggedIn = computed(() => authStore.isLoggedIn);
+
+const touchContent = () => {
+  const headerElement = document.querySelector(".header");
+  const navElement = document.querySelector(".nav");
+  
+  if (!headerElement || !navElement) return;
+
+  const headerBottom = headerElement.getBoundingClientRect().bottom;
+  const navBottom = navElement.getBoundingClientRect().bottom;
+
+  if (navBottom > 0) {
+    changeColor.value = true;
+  } 
+  else if (navBottom < headerBottom) {
+    changeColor.value = false;
   }
 };
+
+const handleLogout = async () => {
+  const success = await authStore.logout();
+  if (success) {
+    focusMenu.value = false; 
+    router.push("/login");
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("transitionend", touchContent);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("transitionend", touchContent);
+});
 </script>
 
 <style scoped>
