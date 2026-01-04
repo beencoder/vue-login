@@ -4,7 +4,7 @@
 
 ## 🔗 Link
 
-- **Live Demo:** [https://auth-flow-blond.vercel.app/](https://auth-flow-blond.vercel.app/)
+- **Live Demo:** [https://auth-flow-blond.vercel.app](https://auth-flow-blond.vercel.app)
 
 ## 🛠 Tech Stack
 
